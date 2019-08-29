@@ -24,7 +24,7 @@ class Network:
 
     def fit(self, train, a_targets, b_targets, c_targets):
         try:
-            self.model.fit(train, {'a': a_targets, 'b': b_targets, 'c': c_targets}, epochs=10)
+            self.model.fit(train, {'a': a_targets, 'b': b_targets, 'c': c_targets}, epochs=10, batch = 10)
             return 1
         except:
             return 0
