@@ -6,7 +6,7 @@ class DataManager:
         self. NUM_Category = NUM_Category
 
     # example data = [[1, 14, 12, 5, 1, 2]]
-    # 직전에 1, 14, 12번 카테고리 상품을 보고, 5번 상품을 보고 있는 경우.
+    # 1, 14, 12번 카테고리 상품을 보고 난 뒤, 5번 상품을 보고 있는 경우.
     # 1은 남성을 의미, 2는 2학년을 의미.
     def build_learndata(self, data):
         if data is not None:

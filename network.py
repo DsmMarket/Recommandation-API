@@ -6,7 +6,6 @@ import numpy as np
 class Network:
 
     def __init__(self, NUM_Category):
-
         self.inputs = layers.Input(shape=(5,), name='input')
 
         x = layers.Dense(16, activation='relu')(self.inputs)
@@ -27,23 +26,26 @@ class Network:
                       loss={'a': mean_squared_error, 'b': mean_squared_error, 'c': mean_squared_error},
                       loss_weights={'a': 0.25, 'b': 1., 'c': 10.})
 
-    def fit(self, train, a_targets, b_targets, c_targets):
+    def fit(self, train, a_targets, b_targets, c_targets, num_epoches, num_batches):
         try:
-            self.model.fit(train, {'a': a_targets, 'b': b_targets, 'c': c_targets}, epochs=10, batch = 10)
+            self.model.fit(train, {'a': a_targets, 'b': b_targets, 'c': c_targets},
+                           epochs=num_epoches, batch = num_batches)
             return 1
         except:
             return 0
 
     def predict(self, sample):
-        self.prid = map(np.argmax, self.model.predict(np.array([sample])))
-        return self.prid
+        self.pred = self.model.predict(np.array(sample))
+        self.pred_a = list(map(np.argmax, self.pred[0]))
+        self.pred_b = list(map(np.argmax, self.pred[1]))
+        self.pred_c = list(map(np.argmax, self.pred[2]))
+        return [self.pred_a, self.pred_b, self.pred_c]
 
     def save_model(self, model_path):
         if model_path is not None and self.model is not None:
             self.model.save_weights(model_path, overwrite=True)
         else:
             self.model.save_weights(model_path )
-
 
     def load_model(self, model_path):
         if model_path is not None:
