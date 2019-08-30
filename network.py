@@ -27,12 +27,8 @@ class Network:
                       loss_weights={'a': 0.25, 'b': 1., 'c': 10.})
 
     def fit(self, train, a_targets, b_targets, c_targets, num_epoches, num_batches):
-        try:
-            self.model.fit(train, {'a': a_targets, 'b': b_targets, 'c': c_targets},
-                           epochs=num_epoches, batch = num_batches)
-            return 1
-        except:
-            return 0
+        self.model.fit(train, {'a': a_targets, 'b': b_targets, 'c': c_targets},
+                        epochs=num_epoches, batch_size = num_batches)
 
     def predict(self, pred_data):
         self.pred = self.model.predict(np.array(pred_data))
