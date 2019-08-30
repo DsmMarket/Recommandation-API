@@ -34,8 +34,8 @@ class Network:
         except:
             return 0
 
-    def predict(self, sample):
-        self.pred = self.model.predict(np.array(sample))
+    def predict(self, pred_data):
+        self.pred = self.model.predict(np.array(pred_data))
         self.pred_a = list(map(np.argmax, self.pred[0]))
         self.pred_b = list(map(np.argmax, self.pred[1]))
         self.pred_c = list(map(np.argmax, self.pred[2]))

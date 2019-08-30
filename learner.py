@@ -11,7 +11,7 @@ class Leaner:
         return self.network.fit(train = self.data_train, a_targets = self.data_a, b_targets = self.data_b, c_targets = self.data_c,
                            num_epoches=num_epoches, num_batches = num_batches)
 
-    def predict(self, sample = None):
-        return self.network.predict(sample)
+    def predict(self, pred_data = None):
+        return self.network.predict(pred_data)
 
 
