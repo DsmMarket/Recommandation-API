@@ -13,7 +13,7 @@ class Leaner:
                                 b_targets = np.array(self.data_b), c_targets = np.array(self.data_c),
                                 num_epoches=num_epoches, num_batches = num_batches)
 
-    def predict(self, pred_data = None):
+    def predict(self, pred_data):
         return self.network.predict(pred_data)
 
 
