@@ -1,39 +1,37 @@
-from flask import Flask, redirect, url_for
+from flask import Flask, request
 from data_manager import DataManager
 from learner import Leaner
 
 app = Flask(__name__)
-datamanager = DataManager()
-learner = Leaner()
 
-# category number
-NUM_ACTIONS = 2
+NUM_Category = 16
+datamanaget = DataManager(NUM_Category)
+learner = Leaner(NUM_Category)
 
-# data form
-# 카테고리 코드가 1, 7, 3, 4 라고 할때
-# data = '1, 7, 3, 5'
-@app.route('/learning/<data>')
-def learning(data):
-    data = datamanager.learndata(data)
-    check = learner.learn(data)
-    return data
-# return form
-# 1 mean success, 0 mean failed
+@app.route('/get_log')
+def get_log():
+    data = [request.form['1st'],
+            request.form['2nd'],
+            request.form['3rd'],
+            request.form['4th'],
+            request.form['5th'],
+            request.form['6th'],
+            request.form['sex'],
+            request.form['grade']]
+    pred_data = datamanaget.build_preddata(data)
+    train_data = datamanaget.build_learndata(data)
+    return
 
-# data form
-# 카테고리 코드가 7이라 할 때
-# data = '1'
-@app.route('/recommand/<data>')
-def recommand(data):
-    return data
-# return form
-# 카테고리 코드가 1, 3, 4라고 할 때
-# data = '1, 3, 4'
+def recommandation(data):
+    learner.predict(data)
+    return
 
-# data form
-# 1 mean click, 0 mean non-click
-@app.route('/prob/<check>')
-def involve(check):
-    return check
-# return form
-# 1 mean success, 0 mean failed
+def fit(data):
+    learner.fit(data)
+    return
+
+def save_data():
+    return
+
+def load_data():
+    return
