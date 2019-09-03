@@ -23,8 +23,8 @@ def get_log():
     return
 
 def recommandation(data):
-    learner.predict(data)
-    return
+    return learner.predict(data)[0]
+
 
 def fit(data):
     learner.fit(data)
