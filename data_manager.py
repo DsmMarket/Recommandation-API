@@ -22,9 +22,8 @@ class DataManager:
             b_target = self.build_ytrain(b.values.tolist())
             c_target = self.build_ytrain(c.values.tolist())
 
-            return X, a_target, b_target, c_target
-        else:
-            return False
+            return [X, a_target, b_target, c_target]
+        return False
 
     def toint(self, array):
         res = []
@@ -46,6 +45,11 @@ class DataManager:
             data = pd.concat([pd.DataFrame([]),
                            pd.concat([data[3], data[4], data[5], data[6], data[7]], axis=1)], axis=0)
             return data
-        else:
-            return
+        return False
 
+    def merge_data(self, data):
+        if data is not None or len(data[0]) != 8:
+            train_data = self.build_learndata(data)
+            pred_data = self.build_preddata(data)
+            return train_data, pred_data
+        return False
