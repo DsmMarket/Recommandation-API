@@ -1,8 +1,7 @@
 from flask import Flask, request
 from data_manager import DataManager
 from learner import Leaner
-import json
-from collections import OrderedDict
+import pandas as pd
 
 app = Flask(__name__)
 
@@ -23,12 +22,16 @@ def get_log():
             request.args.get('grade', type=int)]]
 
     train_data, pred_data = datamanager.merge_data(data)
-    save_data(train_data)
-    # learner.fit(data=train_data, num_epoches=1000, num_batches=10)
+    save_data(data)
     recommand_list = learner.predict(pred_data)
     return str(recommand_list)
 
 def save_data(data):
-    return
+    try:
+        data_pd = pd.DataFrame(data)
+        data_pd.to_csv("data.csv", mode='a', header=False)
+        return True
+    except:
+        return False
 
 app.run()
