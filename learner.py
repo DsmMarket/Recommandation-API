@@ -3,8 +3,8 @@ from data_manager import DataManager
 import numpy as np
 
 class Leaner:
-    def __init__(self, NUM_Category, model_path = 'model.h5'):
-        self.network = Network(NUM_Category = NUM_Category, model_path=model_path)
+    def __init__(self, NUM_Category):
+        self.network = Network(NUM_Category = NUM_Category)
         self.DataManager = DataManager(NUM_Category = NUM_Category)
 
     def fit(self, data, num_epoches = 1000, num_batches = 10, model_path = 'model.h5'):
