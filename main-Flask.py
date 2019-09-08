@@ -30,8 +30,6 @@ def save_data(data):
     try:
         data_pd = pd.DataFrame(data)
         data_pd.to_csv("data.csv", mode='a', header=False)
-        return True
-    except:
-        return False
+    except: pass
 
 app.run()
