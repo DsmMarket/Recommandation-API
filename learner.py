@@ -3,27 +3,31 @@ from data_manager import DataManager
 import numpy as np
 
 class Leaner:
-    def __init__(self, NUM_Category):
-        self.network = Network(NUM_Category = NUM_Category)
+    def __init__(self, NUM_Category,
+                 model_path='model.json', weight_path='weight.h5'):
+        self.model_path = model_path
+        self.weight_path = weight_path
+        self.network = Network(NUM_Category = NUM_Category,
+                               model_path = model_path,
+                               weight_path = weight_path)
         self.DataManager = DataManager(NUM_Category = NUM_Category)
 
-    def fit(self, data, num_epoches = 1000, num_batches = 10, model_path = 'model.h5'):
-        if data is not False:
-            self.data_train, self.data_a, self.data_b, self.data_c = data[0], data[1], data[2], data[3]
-            self.network.fit(train = np.array(self.data_train), a_targets = np.array(self.data_a),
-                                    b_targets = np.array(self.data_b), c_targets = np.array(self.data_c),
-                                    num_epoches=num_epoches, num_batches = num_batches)
-            self.savemodel(model_path)
-            return
-        return False
+    def fit(self, data, num_epoches = 1000, num_batches = 10):
+        self.data_train = data[0]
+        self.data_a = data[1]
+        self.data_b = data[2]
+        self.data_c = data[3]
+        self.network.fit(train = np.array(self.data_train),
+                         a_targets = np.array(self.data_a),
+                         b_targets = np.array(self.data_b),
+                         c_targets = np.array(self.data_c),
+                         num_epoches=num_epoches, num_batches = num_batches)
+        self.savemodel()
 
     def predict(self, pred_data):
-        if pred_data is not False:
-            return self.network.predict(pred_data)
-        return False
+        return self.network.predict(pred_data)
 
-    def savemodel(self, model_path):
-        model_path = model_path
-        self.network.save_model(model_path)
+    def savemodel(self):
+        self.network.save_model(self.model_path, self.weight_path)
 
 
