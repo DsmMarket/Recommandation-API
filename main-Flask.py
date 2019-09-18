@@ -13,15 +13,11 @@ NUM_Category = 16
 def get_log():
     datamanager = DataManager(NUM_Category)
     learner = Leaner(NUM_Category)
+	category = request.args.get('category', type=list)
+	sex = request.args.get('sex', type = int)
+	grade = request.args.get('grade', type = int)
 
-    data = [[request.args.get('1st', type=int),
-            request.args.get('2nd', type=int),
-            request.args.get('3rd', type=int),
-            request.args.get('4th', type=int),
-            request.args.get('5th', type=int),
-            request.args.get('6th', type=int),
-            request.args.get('sex', type=int),
-            request.args.get('grade', type=int)]]
+    data = [category + sex + grade]
 
     train_data, pred_data = datamanager.merge_data(data)
     save_data(data)
