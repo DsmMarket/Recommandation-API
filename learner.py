@@ -12,7 +12,7 @@ class Leaner:
                                weight_path = weight_path)
         self.DataManager = DataManager(NUM_Category = NUM_Category)
 
-    def fit(self, data, num_epoches = 1000, num_batches = 10):
+    def fit(self, data, epochs = 1000, batch_size = 10):
         self.data_train = data[0]
         self.data_a = data[1]
         self.data_b = data[2]
@@ -21,7 +21,7 @@ class Leaner:
                          a_targets = np.array(self.data_a),
                          b_targets = np.array(self.data_b),
                          c_targets = np.array(self.data_c),
-                         num_epoches=num_epoches, num_batches = num_batches)
+                         epochs=num_epoches, batch_size = batch_size)
         self.savemodel()
 
     def predict(self, pred_data):
