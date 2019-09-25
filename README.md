@@ -17,6 +17,8 @@
 로그를 전송할 때는 다음과 같이 주시면 됩니다.
 `get_log?category=[1, 2, 3, 4, 5, 6]&sex=1$grade=2`
 
+#### 추천 시스템을 api가 아닌 웹 결합 어플리케이션으로 바꾸는 방법을 고안 중입니다.
+
 ### Harmful Photo detector API
 
 딥 러닝을 이용한 유해사진 검출 api입니다. DsmMarket의 사용자가 대여/판매 포스트를 올릴 때마다 사진이 api로 전송되어 검사합니다. object detection model은 yolo(darkflow)를 사용했습니다. 현재 검출하기로 한 유해 물품은 다음과 같습니다.
