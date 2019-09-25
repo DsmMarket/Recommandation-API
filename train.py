@@ -15,4 +15,4 @@ train_data = []
 for i in data:
     train_data.append(i[1:])
 
-learner.fit(datamanager.build_learndata(train_data), num_epoches = 1000, num_batches = 10)
+learner.fit(datamanager.build_learndata(train_data), epochs= 1000, batch_size = 10)
