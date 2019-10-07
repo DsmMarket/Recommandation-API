@@ -13,11 +13,11 @@ NUM_Category = 16
 def get_log():
     datamanager = DataManager(NUM_Category)
     learner = Leaner(NUM_Category)
-	category = request.args.get('category', type=list)
-	sex = request.args.get('sex', type = int)
-	grade = request.args.get('grade', type = int)
 
-    data = [category + sex + grade]
+    categories = request.args.get('categories', type=str)[1:-1].split(', ')
+    sex = request.args.get('sex', type=int)
+    grade = request.args.get('grade', type=int)
+    data = [categories + [sex, grade]]
 
     train_data, pred_data = datamanager.merge_data(data)
     save_data(data)
@@ -25,6 +25,11 @@ def get_log():
     data = OrderedDict()
     data["reclist"] = list(map(str, [recommand_list[0][0], recommand_list[1][0], recommand_list[2][0]]))
     return make_response(json.dumps(data, ensure_ascii=False, indent='\t'))
+
+@app.errorhandler(Exception)
+def unhandled_exception(e):
+    app.logger.error('Exception: %s', (e))
+    return 'Exception: ' + str(e)
 
 def save_data(data):
     try:
