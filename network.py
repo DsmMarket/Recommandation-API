@@ -32,9 +32,9 @@ class Network:
                            loss={'a': mean_squared_error, 'b': mean_squared_error, 'c': mean_squared_error},
                            loss_weights={'a': 1., 'b': 1., 'c': 1.})
 
-    def fit(self, train, a_targets, b_targets, c_targets, epochs, batch_size):
+    def fit(self, train, a_targets, b_targets, c_targets, num_epoches, num_batches):
         self.model.fit(train, {'a': a_targets, 'b': b_targets, 'c': c_targets},
-                        epochs=epochs, batch_size = batch_size)
+                        epochs=num_epoches, batch_size = num_batches)
 
     def predict(self, pred_data):
         self.pred = self.model.predict(np.array(pred_data))

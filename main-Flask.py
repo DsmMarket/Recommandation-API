@@ -18,10 +18,9 @@ def get_log():
     grade = request.args.get('grade', type=int)
     data = [categories + [sex, grade]]
 
-    train_data, pred_data = datamanager.merge_data(data)
+    train, pred = datamanager.merge_data(data)
     save_data(data)
-    recommend_list = list(map(str, sum(learner.predict(pred_data), [])))
-    print(recommend_list)
+    recommend_list = list(map(str, sum(learner.predict(train, pred), [])))
     return make_response(dumps(recommend_list))
 
 @app.errorhandler(Exception)
