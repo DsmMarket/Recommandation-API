@@ -1,9 +1,8 @@
 from flask import Flask, request, make_response
 from data_manager import DataManager
 from learner import Leaner
+from json import dumps
 import pandas as pd
-import json
-from collections import OrderedDict
 
 app = Flask(__name__)
 
@@ -21,10 +20,9 @@ def get_log():
 
     train_data, pred_data = datamanager.merge_data(data)
     save_data(data)
-    recommand_list = learner.predict(pred_data)
-    data = OrderedDict()
-    data["reclist"] = list(map(str, [recommand_list[0][0], recommand_list[1][0], recommand_list[2][0]]))
-    return make_response(json.dumps(data, ensure_ascii=False, indent='\t'))
+    recommend_list = list(map(str, sum(learner.predict(pred_data), [])))
+    print(recommend_list)
+    return make_response(dumps(recommend_list))
 
 @app.errorhandler(Exception)
 def unhandled_exception(e):
