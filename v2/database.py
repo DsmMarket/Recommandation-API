@@ -13,9 +13,9 @@ class data:
         deal = pd.DataFrame(cursor.fetchall())
 
         dropcol = self.dropcol()
-        self.usr = usr.drop(dropcol[0], axis='columns', inplace=True)
-        self.deal = deal.drop(dropcol[1], axis='columns', inplace=True)
-        self.rent = rent.drop(dropcol[2], axis='columns', inplace=True)
+        self.usr = usr.drop(dropcol[0], axis='columns')
+        self.deal = deal.drop(dropcol[1], axis='columns')
+        self.rent = rent.drop(dropcol[2], axis='columns')
 
         colname = self.colname()
         self.usr.columns = colname[0]
@@ -41,27 +41,29 @@ class data:
         return [usrcol, dealcol, rentcol]
 
     def dealLog(self):
-        deallog = pd.DataFrame()
-        deallog.columns = ['userId', 'dealId', 'rating']
-        for u in self.usr:
-            j = json.loads(u['dealLog'])
+        deallog = pd.DataFrame(columns=['userId', 'dealId', 'ratings'])
+        i = 1
+        for u in range(len(self.usr)):
+            j = json.loads(self.usr['dealLog'][u])
             for key in j:
-                deallog.append([u['id'], j[key], 1])
+                deallog.loc[i] = [self.usr['id'][u], j[key], 1]
+                i += 1
         return deallog
 
     def rentLog(self):
-        rentlog = pd.DataFrame()
-        rentlog.columns = ['userId', 'rentId', 'rating']
-        for u in self.usr:
-            j = json.loads(u['rentLog'])
+        rentlog = pd.DataFrame(columns=['userId', 'rentId', 'ratings'])
+        i = 1
+        for u in range(len(self.usr)):
+            j = json.loads(self.usr['RentLog'][u])
             for key in j:
-                rentlog.append([u['id'], j[key], 1])
+                rentlog.loc[i] = [self.usr['id'][u], j[key], 1]
+                i += 1
         return rentlog
 
     def Logs(self):
         dealLog = self.dealLog()
         rentLog = self.rentLog()
-        return dealLog, rentLog
+        return rentLog, dealLog
 
     def items(self):
-        return self.deal, self.rent
+        return self.rent, self.deal

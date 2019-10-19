@@ -1,6 +1,6 @@
 from flask import Flask
 from flaskext.mysql import MySQL
-from creatmodel import CreateModel
+from creatdata import CreateData
 
 app = Flask(__name__)
 mysql = MySQL()
@@ -12,4 +12,4 @@ mysql.init_app(app)
 conn = mysql.connect()
 cursor = conn.cursor()
 
-Model = CreateModel(cursor)
+Model = CreateData(cursor)

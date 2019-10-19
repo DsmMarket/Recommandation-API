@@ -6,7 +6,7 @@ from sklearn.preprocessing import MultiLabelBinarizer
 import tensorrec
 from database import data
 
-class CreateModel:
+class CreateData:
 
     def __init__(self, cursor):
 
@@ -15,8 +15,8 @@ class CreateModel:
         rentitems, dealitems = Data.items()
 
         # itemLogs
-        rentLog, n_users_rent, n_items_rent = self.raw_ratings(rentLog)
-        dealLog, n_users_deal, n_items_deal = self.raw_ratings(dealLog)
+        rentLog, n_users_rent, n_items_rent = self.raw_ratings(rentLog, 0)
+        dealLog, n_users_deal, n_items_deal = self.raw_ratings(dealLog, 1)
 
         sparse_rent = self.interactions_list_to_sparse_matrix(rentLog, n_users_rent, n_items_rent)
         sparse_deal = self.interactions_list_to_sparse_matrix(dealLog, n_users_deal, n_items_deal)
@@ -58,15 +58,20 @@ class CreateModel:
                             item_features=self.full_dealitem_features,
                             n_sampled_items=int(n_items_deal * .01))
 
-    def raw_ratings(self, Log):
+    def raw_ratings(self, log, check):
+        Log = log
         lens_to_internal_user_ids = defaultdict(lambda: len(lens_to_internal_user_ids))
         lens_to_internal_item_ids = defaultdict(lambda: len(lens_to_internal_item_ids))
-        for row in Log:
-            print(row)
-            row[0] = lens_to_internal_user_ids[int(row[0])]
-            row[1] = lens_to_internal_item_ids[int(row[1])]
-            row[2] = float(row[2])
-            print(row)
+        if check == 0:
+            for row in range(1, len(Log)+1):
+                Log['userId'][row] = lens_to_internal_user_ids[int(Log['userId'][row])]
+                Log['rentId'][row] = lens_to_internal_item_ids[int(Log['rentId'][row])]
+                Log['ratings'][row] = float(Log['ratings'][row])
+        else:
+            for row in range(1, len(Log)+1):
+                Log['userId'][row] = lens_to_internal_user_ids[int(Log['userId'][row])]
+                Log['dealId'][row] = lens_to_internal_item_ids[int(Log['dealId'][row])]
+                Log['ratings'][row] = float(Log['ratings'][row])
         n_users = len(lens_to_internal_user_ids)
         n_items = len(lens_to_internal_item_ids)
         return Log, n_users, n_items
@@ -79,16 +84,18 @@ class CreateModel:
         return train_ratings, test_ratings
 
     def interactions_list_to_sparse_matrix(self, interactions, n_users, n_items):
-        users_column, items_column, ratings_column, _ = zip(*interactions)
+        users_column, items_column, ratings_column = zip(*interactions.values.tolist())
         return sparse.coo_matrix((ratings_column, (users_column, items_column)),
                                  shape=(n_users, n_items))
 
     def items_categories(self, items):
+        items = items.values.tolist()
         item_categories_by_internal_id = {}
         item_titles_by_internal_id = {}
+        ### need to fix.
         for row in items:
-            row[0] = items[int(row[0])]  # Map to IDs
-            row[2] = row[2].split(',')  # Split up the genres
+            row[0] = items[int(row[0])]
+            row[2] = row[2].split(',')
             item_categories_by_internal_id[row[0]] = row[2]
             item_titles_by_internal_id[row[0]] = row[1]
         return item_categories_by_internal_id, item_titles_by_internal_id
