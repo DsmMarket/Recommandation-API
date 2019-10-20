@@ -50,13 +50,13 @@ class CreateData:
         self.rent_model.fit(interactions=sparse_rent,
                             user_features=self.user_indicator_features_rent,
                             item_features=self.full_rentitem_features,
-                            n_sampled_items=int(n_items_rent * .01))
+                            n_sampled_items=n_items_rent)
 
         self.deal_model = tensorrec.TensorRec(n_components=5, loss_graph=tensorrec.loss_graphs.WMRBLossGraph())
         self.deal_model.fit(interactions=sparse_deal,
                             user_features=self.user_indicator_features_deal,
                             item_features=self.full_dealitem_features,
-                            n_sampled_items=int(n_items_deal * .01))
+                            n_sampled_items=n_items_deal)
 
     def raw_ratings(self, log, check):
         Log = log
@@ -90,11 +90,11 @@ class CreateData:
 
     def items_categories(self, items):
         items = items.values.tolist()
+        lens_to_internal_item_ids = defaultdict(lambda: len(lens_to_internal_item_ids))
         item_categories_by_internal_id = {}
         item_titles_by_internal_id = {}
-        ### need to fix.
         for row in items:
-            row[0] = items[int(row[0])]
+            row[0] = lens_to_internal_item_ids[int(row[0])]
             row[2] = row[2].split(',')
             item_categories_by_internal_id[row[0]] = row[2]
             item_titles_by_internal_id[row[0]] = row[1]
