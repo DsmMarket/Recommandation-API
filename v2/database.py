@@ -29,15 +29,15 @@ class data:
         return [usrexe, rentexe, dealexe]
 
     def dropcol(self):
-        usrdrop = [1, 2, 3, 4, 9, 10]
-        rentdrop = [1, 2, 3, 4, 7, 8, 9]
-        dealdrop = [1, 2, 3, 4, 7, 8, 9, 10]
+        usrdrop = [1, 2, 4, 5, 9, 10]
+        rentdrop = [1, 2, 4, 5, 7, 8, 9]
+        dealdrop = [1, 2, 4, 5, 7, 8, 9, 10]
         return [usrdrop, rentdrop, dealdrop]
 
     def colname(self):
         usrcol = ['id', 'grade', 'gender', 'dealLog', 'RentLog']
-        rentcol = ['id', 'price', 'category']
-        dealcol = ['id', 'price', 'category']
+        rentcol = ['id', 'name', 'category']
+        dealcol = ['id', 'name', 'category']
         return [usrcol, dealcol, rentcol]
 
     def dealLog(self):
