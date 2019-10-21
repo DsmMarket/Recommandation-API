@@ -1,6 +1,6 @@
 from flask import Flask
 from flaskext.mysql import MySQL
-from creatdata import CreateData
+from creatmodel import CreateModel
 
 app = Flask(__name__)
 mysql = MySQL()
@@ -12,4 +12,7 @@ mysql.init_app(app)
 conn = mysql.connect()
 cursor = conn.cursor()
 
-Model = CreateData(cursor)
+Model = CreateModel(cursor)
+
+#example
+print(Model.recommendation(1, 'rent'))
