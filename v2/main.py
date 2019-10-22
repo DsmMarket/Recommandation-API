@@ -16,3 +16,5 @@ Model = CreateModel(cursor)
 
 #example
 print(Model.recommendation(1, 'rent'))
+print(Model.recommendation(1, 'deal'))
+
