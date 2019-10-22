@@ -1,18 +1,17 @@
 from collections import defaultdict
-import numpy
 import random
 from scipy import sparse
 from sklearn.preprocessing import MultiLabelBinarizer
 import tensorrec
-from database import data
+from getdatabase import getdatabase
 
 class CreateModel:
 
     def __init__(self, cursor):
 
-        Data = data(cursor)
-        rentLog, dealLog = Data.Logs()
-        rentitems, dealitems = Data.items()
+        DB = getdatabase(cursor)
+        rentLog, dealLog = DB.Logs()
+        rentitems, dealitems = DB.items()
 
         self.lens_to_internal_rentuser_ids = defaultdict(lambda: len(self.lens_to_internal_rentuser_ids))
         self.lens_to_internal_rentitem_ids = defaultdict(lambda: len(self.lens_to_internal_rentitem_ids))
@@ -22,7 +21,6 @@ class CreateModel:
         # itemLogs
         rentLog, n_users_rent, n_items_rent = self.raw_ratings(rentLog, 'rent')
         dealLog, n_users_deal, n_items_deal = self.raw_ratings(dealLog, 'deal')
-
         sparse_rent = self.interactions_list_to_sparse_matrix(rentLog, n_users_rent, n_items_rent)
         sparse_deal = self.interactions_list_to_sparse_matrix(dealLog, n_users_deal, n_items_deal)
 
@@ -32,11 +30,11 @@ class CreateModel:
         self.item_indicator_features_deal = sparse.identity(n_items_deal)
 
         # itemCategories
-        rentitems_categories, rentitems_titles = self.items_categories(rentitems, 'rent')
-        dealitems_categories, dealitems_titles = self.items_categories(dealitems, 'deal')
+        rentitems_categories, rentitems_titles = self.items_categories(rentitems)
+        dealitems_categories, dealitems_titles = self.items_categories(dealitems)
 
-        rent_categories = [rentitems_categories[internal_id] for internal_id in range(1, n_items_rent+1)]
-        deal_categories = [dealitems_categories[internal_id] for internal_id in range(1, n_items_deal+1)]
+        rent_categories = [rentitems_categories[internal_id] for internal_id in range(n_items_rent)]
+        deal_categories = [dealitems_categories[internal_id] for internal_id in range(n_items_deal)]
 
         rent_categories_features = MultiLabelBinarizer().fit_transform(rent_categories)
         deal_categories_features = MultiLabelBinarizer().fit_transform(deal_categories)
@@ -92,16 +90,12 @@ class CreateModel:
         return sparse.coo_matrix((ratings_column, (users_column, items_column)),
                                  shape=(n_users, n_items))
 
-    def items_categories(self, items, rentordeal):
+    def items_categories(self, items):
         items = items.values.tolist()
-        if rentordeal == 'rent':
-            lens_to_internal_item_ids = self.lens_to_internal_rentitem_ids
-        else:
-            lens_to_internal_item_ids = self.lens_to_internal_dealitem_ids
         item_categories_by_internal_id = {}
         item_titles_by_internal_id = {}
-        for row in items:
-            row[0] = lens_to_internal_item_ids[int(row[0])]
+        for i, row in enumerate(items):
+            row[0] = i
             row[2] = row[2].split(',')
             item_categories_by_internal_id[row[0]] = row[2]
             item_titles_by_internal_id[row[0]] = row[1]
@@ -110,7 +104,6 @@ class CreateModel:
     def recommendation(self, userid, rentordeal):
         if rentordeal == 'rent':
             user_features = sparse.csr_matrix(self.user_indicator_features_rent)[userid]
-            print(self.full_rentitem_features)
             user_rankings = self.rent_model.predict_rank(user_features=user_features,
                                                          item_features=self.full_rentitem_features)[0]
 
