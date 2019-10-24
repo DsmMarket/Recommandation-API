@@ -1,6 +1,8 @@
-from flask import Flask
 from flaskext.mysql import MySQL
-from creatmodel import CreateModel
+from createdata import Data
+from createmodel import Model
+from flask import Flask, request, make_response
+from json import dumps
 
 app = Flask(__name__)
 mysql = MySQL()
@@ -12,9 +14,29 @@ mysql.init_app(app)
 conn = mysql.connect()
 cursor = conn.cursor()
 
-Model = CreateModel(cursor)
+data = Data(cursor)
+model = Model(data)
 
-#example
-print(Model.recommendation(1, 'rent'))
-print(Model.recommendation(1, 'deal'))
+rentrecommenditems = [model.recommend(i, 'rent') for i in range(data.n_users_rent)]
+dealrecommenditems = [model.recommend(i, 'deal') for i in range(data.n_users_deal)]
 
+@app.route('/recommend', methods=['GET'])
+def recommend():
+    userId = request.args.get('userId', type=int)
+    rentordeal = request.args.get('rentordeal', type=int)
+
+    if rentordeal == 0:
+        recommenditems = rentrecommenditems[userId]
+    elif rentordeal == 1:
+        recommenditems = dealrecommenditems[userId]
+    else:
+        raise ValueError
+
+    return make_response(dumps(str(recommenditems)))
+
+@app.errorhandler(Exception)
+def unhandled_exception(e):
+    app.logger.error('Exception: %s', (e))
+    return 'Exception: ' + str(e)
+
+app.run('')

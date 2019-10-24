@@ -33,23 +33,34 @@ class getdatabase:
         self.rent.columns = config.dealcol
         self.deal.columns = config.rentcol
 
+        # dummy item
+        dummy = pd.DataFrame({'id':[0], 'name':['dummy merchant'], 'category':['dummy']})
+        self.rent = pd.concat([dummy, self.rent])
+        self.deal = pd.concat([dummy, self.deal])
+
+        self.rentLog = self.Log('rent')
+        self.dealLog = self.Log('deal')
+
     def Log(self, rentordeal):
         if rentordeal == 'rent':
             log = pd.DataFrame(columns=['userId', 'rentId', 'ratings'])
+            itemlen = len(self.rent)
         else:
             log = pd.DataFrame(columns=['userId', 'dealId', 'ratings'])
+            itemlen = len(self.deal)
         i = 1
+
+        # dummy user
+        for i in range(itemlen):
+            log.loc[i] = [0, i, 1]
+            i += 1
+
+        overlap = ''
         for u in range(len(self.usr)):
             j = json.loads(self.usr[rentordeal + 'Log'][u])
             for key in j:
-                log.loc[i] = [self.usr['id'][u], j[key], 1]
-                i += 1
+                if overlap != [self.usr['id'][u], j[key], 1]:
+                    log.loc[i] = [self.usr['id'][u], j[key], 1]
+                    i += 1
+                overlap = [self.usr['id'][u], j[key], 1]
         return log
-
-    def Logs(self):
-        rentLog = self.Log('rent')
-        dealLog = self.Log('deal')
-        return rentLog, dealLog
-
-    def items(self):
-        return self.rent, self.deal
