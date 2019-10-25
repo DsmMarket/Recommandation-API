@@ -39,4 +39,4 @@ def unhandled_exception(e):
     app.logger.error('Exception: %s', (e))
     return 'Exception: ' + str(e)
 
-app.run('')
+app.run(port=1937)
