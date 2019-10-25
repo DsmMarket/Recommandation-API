@@ -26,9 +26,9 @@ def recommend():
     rentordeal = request.args.get('rentordeal', type=int)
 
     if rentordeal == 0:
-        recommenditems = rentrecommenditems[userId]
-    elif rentordeal == 1:
         recommenditems = dealrecommenditems[userId]
+    elif rentordeal == 1:
+        recommenditems = rentrecommenditems[userId]
     else:
         raise ValueError
 
