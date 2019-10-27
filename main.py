@@ -32,7 +32,7 @@ def recommend():
     else:
         raise ValueError
 
-    return make_response(dumps(str(recommenditems)))
+    return make_response(dumps({'list': str(recommenditems)}))
 
 @app.errorhandler(Exception)
 def unhandled_exception(e):
