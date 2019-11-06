@@ -44,15 +44,15 @@ class getdatabase:
     def Log(self, rentordeal):
         if rentordeal == 'rent':
             log = pd.DataFrame(columns=['userId', 'rentId', 'ratings'])
-            itemlen = len(self.rent)
+            itemlen = self.rent['id'].tolist()
         else:
             log = pd.DataFrame(columns=['userId', 'dealId', 'ratings'])
-            itemlen = len(self.deal)
+            itemlen = self.deal['id'].tolist()
         i = 1
 
         # dummy user
-        for i in range(itemlen):
-            log.loc[i] = [0, i, 1]
+        for j in itemlen:
+            log.loc[i] = [0, j, 1]
             i += 1
 
         overlap = ''
