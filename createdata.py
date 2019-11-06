@@ -51,7 +51,7 @@ class Data:
     def raw_ratings(self, log, rentordeal):
         Log = log
         if rentordeal == 'rent':
-            for row in range(len(Log)):
+            for row in range(1, len(Log) + 1):
                 Log['userId'][row] = self.lens_to_internal_rentuser_ids[int(Log['userId'][row])]
                 Log['rentId'][row] = self.lens_to_internal_rentitem_ids[int(Log['rentId'][row])]
                 Log['ratings'][row] = float(Log['ratings'][row])
@@ -59,7 +59,7 @@ class Data:
             n_items = len(self.lens_to_internal_rentitem_ids)
 
         elif rentordeal == 'deal':
-            for row in range(len(Log)):
+            for row in range(1, len(Log) + 1):
                 Log['userId'][row] = self.lens_to_internal_dealuser_ids[int(Log['userId'][row])]
                 Log['dealId'][row] = self.lens_to_internal_dealitem_ids[int(Log['dealId'][row])]
                 Log['ratings'][row] = float(Log['ratings'][row])
