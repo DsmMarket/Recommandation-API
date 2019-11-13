@@ -34,12 +34,21 @@ def recommend():
         recommenditems = list(map(lambda x: rentitems[x], rentrecommenditems[userId]))
     else:
         raise ValueError
+<<<<<<< HEAD
     data = list(map(str, recommenditems))
     return make_response(json.dumps(str(data)))
+=======
+    recommenditems = list(map(str, recommenditems))
+    return make_response(dumps(recommenditems))
+>>>>>>> 56f5ff385e979f3045c2cffe82f22aca59c7abac
 
 @app.errorhandler(Exception)
 def unhandled_exception(e):
     app.logger.error('Exception: %s', (e))
     return 'Exception: ' + str(e)
 
+<<<<<<< HEAD
 app.run(host='0.0.0.0', port=1937)
+=======
+app.run(host='localhost', port=1937)
+>>>>>>> 56f5ff385e979f3045c2cffe82f22aca59c7abac
