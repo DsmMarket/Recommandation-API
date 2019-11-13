@@ -44,23 +44,23 @@ class getdatabase:
     def Log(self, rentordeal):
         if rentordeal == 'rent':
             log = pd.DataFrame(columns=['userId', 'rentId', 'ratings'])
-            itemlen = len(self.rent)
+            itemlen = self.rent['id'].tolist()
         else:
             log = pd.DataFrame(columns=['userId', 'dealId', 'ratings'])
-            itemlen = len(self.deal)
+            itemlen = self.deal['id'].tolist()
         i = 1
 
         # dummy user
-        for i in range(itemlen):
-            log.loc[i] = [0, i, 1]
+        for j in itemlen:
+            log.loc[i] = [0, j, 1]
             i += 1
 
         overlap = ''
         for u in range(len(self.usr)):
             j = json.loads(self.usr[rentordeal + 'Log'][u])
-            for key in j:
-                if overlap != [self.usr['id'][u], j[key], 1]:
-                    log.loc[i] = [self.usr['id'][u], j[key], 1]
+            for Id in j['logs']:
+                if overlap != [self.usr['id'][u], Id, 1]:
+                    log.loc[i] = [self.usr['id'][u], Id, 1]
                     i += 1
-                overlap = [self.usr['id'][u], j[key], 1]
+                overlap = [self.usr['id'][u], Id, 1]
         return log
