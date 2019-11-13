@@ -34,8 +34,8 @@ def recommend():
         recommenditems = list(map(lambda x: rentitems[x], rentrecommenditems[userId]))
     else:
         raise ValueError
-    data = list(map(str, recommenditems))
-    return make_response(json.dumps(str(data)))
+    return make_response(json.dumps({'list': recommenditems}))
+
 
 @app.errorhandler(Exception)
 def unhandled_exception(e):
